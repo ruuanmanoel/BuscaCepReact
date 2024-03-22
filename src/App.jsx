@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import {FiSearch} from 'react-icons/fi'
+import api from './services/api'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import TableCep from './components/TableCep'
 
 function App() {
   const [input, setInput] = useState("")
+  const [cep, setCep] = useState({})
 
   const validDigit = (text) => {
     return text.replace(/[^0-9]/g,"");
@@ -14,8 +17,15 @@ function App() {
     const updateValue = validDigit(e.target.value);
     setInput(updateValue);
   }
-  const handleSearch = ()=>{
-    console.log(input)
+  const handleSearch = async ()=>{
+    if(input === "") return;
+    try{
+      const response = await api.get(`${input}/json`)
+      setCep(response.data)
+    }catch{
+      alert("Algo de errado no CEP")
+      setInput("")
+    }
   }
 
   return (
@@ -32,14 +42,7 @@ function App() {
           <FiSearch size={25} color='#FFF'/>
         </button>
       </div>
-      <main className='main'>
-        <h2>CEP: 79003222</h2>
-
-        <span>Rua Teste algum</span>
-        <span>Complemento: Algum complemento</span>
-        <span>Bairro: Vila rosa</span>
-        <span>Campo Grande - MS</span>
-      </main>
+      {Object.keys(cep).length > 0  ? <TableCep cep={cep} /> : null}
     </div>
   )
 }
