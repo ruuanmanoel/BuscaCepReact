@@ -5,7 +5,18 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [input, setInput] = useState("")
+
+  const validDigit = (text) => {
+    return text.replace(/[^0-9]/g,"");
+  }
+  const handleCep = (e) =>{
+    const updateValue = validDigit(e.target.value);
+    setInput(updateValue);
+  }
+  const handleSearch = ()=>{
+    console.log(input)
+  }
 
   return (
     <div className='container'>
@@ -14,8 +25,10 @@ function App() {
         <input 
         type="text"
         placeholder='Digite seu CEP'
+        onChange={e => handleCep(e)}
+        value={input}
         />
-        <button className='buttonSearch'>
+        <button className='buttonSearch' onClick={handleSearch}>
           <FiSearch size={25} color='#FFF'/>
         </button>
       </div>
